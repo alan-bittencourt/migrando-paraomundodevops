@@ -1,0 +1,20 @@
+---
+- name: playbook para atualizar os pacotes dos servidores
+  hosts: all
+  strategy: free
+
+  tasks:
+    - name: Efetuando a atualização dos pacotes nas distros Debian Like
+      apt:
+        name: '*'
+        state: latest
+        update_cache: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Efetuando a atualização dos pacotes nas Distros RedHat Like
+      yum:
+        name: '*'
+        state: latest
+        update_cache: true
+      when: ansible_facts['os_family'] == "RedHat"
+

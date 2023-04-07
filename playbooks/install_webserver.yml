@@ -1,0 +1,23 @@
+---
+- name: Instalando o apache e um serviço ftp
+  hosts: all
+
+  tasks:
+
+    - name: Instalando o Apache e o FTP nas distros Debian Like
+      apt:
+        name:
+          - apache2
+          - proftpd
+        state: latest
+        update_cache: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Instalando o Apache e o FTP nas distros RedHat Like
+      yum:
+        name:
+          - httpd
+          - vsftpd
+        state: latest
+        update_cache: true
+      when: ansible_facts['os_family'] == "RedHat"

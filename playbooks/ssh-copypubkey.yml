@@ -1,0 +1,11 @@
+---
+- name: Playbook para copia de chave publica ssh
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Copiando a chave publica ssh para o host remoto
+      authorized_key:
+        user: "alanb"
+        state: present
+        key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}"

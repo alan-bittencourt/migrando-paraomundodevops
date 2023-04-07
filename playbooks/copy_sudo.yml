@@ -1,0 +1,22 @@
+---
+- name: Playbook para instalar o sudo e o arquivo de sudo do usuario de acesso
+  hosts: all
+
+  vars:
+
+    sudo_file_dest: /etc/sudoers.d/alanb
+    sudo_file_src: ../files/alanb
+
+  tasks:
+
+    - name: Instalando o Sudo
+      package:
+        name: sudo
+        state: latest
+
+    - name: Copy sudoers file
+      copy:
+        src: "{{ sudo_file_src }}"
+        dest: "{{ sudo_file_dest }}"
+        owner: root
+        mode: 0600

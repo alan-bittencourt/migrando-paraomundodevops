@@ -1,0 +1,17 @@
+---
+- name: configurando o sudo para não pedir senha
+  hosts: all
+
+  vars:
+    sudo_file: /etc/sudoers.d/alanb
+
+
+
+  tasks:
+    - name: alterando o sudo
+      lineinfile:
+        path: "{{ sudo_file }}"
+        state: present
+        regexp: '^alanb'
+        line: 'alanb   ALL=(ALL:ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'

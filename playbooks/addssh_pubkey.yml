@@ -1,0 +1,26 @@
+---
+- name: Adcionando a chave SSH Publica ao Know_hosts
+  hosts: all
+  gather_facts: no
+  connection: local
+
+  vars:
+    - known_hosts: "~/.ssh/known_hosts"
+
+  tasks:
+
+    - name: Escaneando e registrando as chaves
+      command: "ssh-keyscan {{ansible_host|default(inventory_hostname)}}"
+      register: "host_keys"
+      changed_when: false
+
+    - file: path={{known_hosts}} state=touch
+      run_once: true
+
+    - blockinfile:
+        dest: "{{known_hosts}}"
+        marker: "# {mark} Esta parte e gerenciada pelo Ansible"
+        block: |
+          {% for h in groups['all'] if hostvars[h].host_keys is defined %}
+          {{ hostvars[h].host_keys.stdout }}
+          {% endfor %}
