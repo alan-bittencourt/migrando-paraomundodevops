@@ -1,6 +1,6 @@
 ---
 - name: Instalando o apache e um serviço ftp
-  hosts: all
+  hosts: webservers
 
   tasks:
 

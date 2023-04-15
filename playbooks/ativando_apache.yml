@@ -1,0 +1,33 @@
+---
+- name: Playbook para deixar os servicos apache e ftp ativados e habilitados no boot
+  hosts: webservers
+
+  tasks:
+
+    - name: Ativando o Apache em maquinas RedHat Like
+      systemd:
+        name: httpd
+        state: started
+        enabled: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Ativando o ftp em maquinas RedHat Like
+      systemd:
+        name: vsftpd
+        state: started
+        enabled: true
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Ativando o apache em maquinas Debian Like
+      systemd:
+        name: apache2
+        state: started
+        enabled: true
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Ativando o ftp em maquinas Debian Like
+      systemd:
+        name: proftpd
+        state: started
+        enabled: true
+      when: ansible_facts['os_family'] == "Debian"
