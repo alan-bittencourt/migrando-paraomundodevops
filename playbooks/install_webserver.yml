@@ -26,3 +26,13 @@
         - httpd
         - vsftpd
       when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Instalando o Apache e o FTP nas distros RedHat Like
+      dnf:
+        name: "{{item}"
+        state: latest
+        update_cache: true
+      with_items:
+        - httpd
+        - vsftpd
+      when: ansible_facts['os_family'] == "Rocky"
