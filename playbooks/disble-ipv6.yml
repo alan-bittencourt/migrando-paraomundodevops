@@ -1,0 +1,21 @@
+---
+- name: Playbook para desativar o ipv6
+  hosts: all
+
+  vars:
+
+    sudo_file_dest: /etc/sysctl.d/ipv6.conf
+    sudo_file_src: ../files/ipv6
+
+  tasks:
+
+    - name: Copy sysctl ipv6 config
+      copy:
+        src: "{{ sudo_file_src }}"
+        dest: "{{ sudo_file_dest }}"
+        owner: root
+        mode: 0600
+
+    - name: Aplicando a alteração do sysctl
+      shell:
+        cmd: sysctl -p "{{ sudo_file_dest }}"

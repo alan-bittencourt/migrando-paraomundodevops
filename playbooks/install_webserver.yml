@@ -6,18 +6,23 @@
 
     - name: Instalando o Apache e o FTP nas distros Debian Like
       apt:
-        name:
-          - apache2
-          - proftpd
+        name: "{{item}}"
         state: latest
         update_cache: true
+      with_items:
+        - apache2
+        - proftpd
+        - php
+        - php-xml
+        - libapache2-mod-php
       when: ansible_facts['os_family'] == "Debian"
 
     - name: Instalando o Apache e o FTP nas distros RedHat Like
       yum:
-        name:
-          - httpd
-          - vsftpd
+        name: "{{item}"
         state: latest
         update_cache: true
+      with_items:
+        - httpd
+        - vsftpd
       when: ansible_facts['os_family'] == "RedHat"
