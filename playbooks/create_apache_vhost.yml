@@ -1,0 +1,75 @@
+---
+- name: Playbook de criação e ativação de virtual hosts
+  hosts: webservers
+
+  vars:
+    httpd_conf_path: "/etc/httpd/conf.d"
+    apache2_conf_path: "/etc/apache2/sites-available"
+    apache2_conf_en: "/etc/apache2/sites-enabled"
+    http_port: "80"
+    https_port: "443"
+    web_users:
+      - example
+      - lab
+
+  tasks:
+
+    - name: criando o diretorio document root
+      file:
+        name: "/var/www/{{ item }}"
+        state: directory
+        mode: 0775
+      with_items:
+        - example.com.br
+        - example.com
+        - lab.com.br
+        - lab.com
+
+    - name: Criando novo vhost em maquinas Debian Like
+      template:
+        src: "../templates/apache2_vhost.j2"
+        dest: "{{ apache2_conf_path }}/{{ item }}.conf"
+      with_items:
+        - example.com.br
+        - example.com
+        - lab.com.br
+        - lab.com
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Ativando o vhost nas maquinas Debian Like
+      file:
+        src: "{{ apache2_conf_path }}/{{ item }}.conf"
+        dest: "{{ apache2_conf_en }}/{{ item }}.conf"
+        state: link
+        mode: 0777
+      with_items:
+        - example.com.br
+        - example.com
+        - lab.com.br
+        - lab.com
+      when: ansible_facts['os_family'] == "Debian"
+      notify: Reload Apache2
+
+    - name: Criando novo vhost em maquinas RedHat Like
+      template:
+        src: "../templates/apache2_vhost.j2"
+        dest: "{{ httpd_conf_path }}/{{ item }}.conf"
+      with_items:
+        - example.com.br
+        - example.com
+        - lab.com.br
+        - lab.com
+      when: ansible_facts['os_family'] == "RedHat" or ansible_facts['os_family'] == "Rocky"
+      notify: Reload Httpd
+
+  handlers:
+    
+    - name: Reload Apache2
+      systemd:
+        name: apache2
+        state: reloaded
+
+    - name: Reload Httpd
+      systemd:
+        name:  httpd
+        state: reloaded

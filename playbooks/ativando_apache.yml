@@ -23,3 +23,13 @@
         - apache2
         - proftpd
       when: ansible_facts['os_family'] == "Debian"
+
+    - name: Ativando os Serviços em maquinas Rocky Like
+      systemd:
+        name: "{{item}}"
+        state: started
+        enabled: true
+      with_items:
+        - httpd
+        - vsftpd
+      when: ansible_facts['os_family'] == "Rocky"

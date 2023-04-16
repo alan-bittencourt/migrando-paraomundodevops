@@ -9,7 +9,7 @@
         name: "{{item}}"
         state: latest
         update_cache: true
-      with_items:
+      loop:
         - apache2
         - proftpd
         - php
@@ -19,20 +19,20 @@
 
     - name: Instalando o Apache e o FTP nas distros RedHat Like
       yum:
-        name: "{{item}"
+        name: "{{item}}"
         state: latest
         update_cache: true
-      with_items:
+      loop:
         - httpd
         - vsftpd
       when: ansible_facts['os_family'] == "RedHat"
 
-    - name: Instalando o Apache e o FTP nas distros RedHat Like
+    - name: Instalando o Apache e o FTP nas distros Rocky Linux
       dnf:
-        name: "{{item}"
+        name: "{{item}}"
         state: latest
         update_cache: true
-      with_items:
+      loop:
         - httpd
         - vsftpd
       when: ansible_facts['os_family'] == "Rocky"
